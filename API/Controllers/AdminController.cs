@@ -24,19 +24,6 @@ namespace API.Controllers
             return _bookService.AddBook(model);
         }
 
-
-        [HttpPost("addAuthor")]
-        public AuthorModel AddAuthor(AuthorModel model)
-        {
-            return _bookService.AddAuthor(model);
-        }
-
-        [HttpDelete("deleteAuthor/{id}")]
-        public bool DeleteAuthor(int id)
-        {
-            return _bookService.DeleteAuthor(id);
-        }
-
         [HttpDelete("deleteBook/{id}")]
         public bool DeleteBook(int id)
         {
@@ -59,18 +46,6 @@ namespace API.Controllers
         public bool DeletePublisher(int id)
         {
             return _publisherService.DeletePublisher(id);
-        }
-
-        [HttpPost("createCategory")]
-        public CategoryModel CreateCategory(CategoryModel model)
-        {
-            return _bookService.CreateCategory(model);
-        }
-
-        [HttpDelete("deleteCategory")]
-        public bool DeleteCategory(int id)
-        {
-            return _bookService.DeleteCategory(id);
         }
     }
 }

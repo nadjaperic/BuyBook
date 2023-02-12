@@ -2,13 +2,11 @@
 using Application.Interfaces;
 using Domain.Common;
 using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class BuyBookDbContext : IdentityDbContext<IdentityUser>, IBuyBookDbContext
+    public class BuyBookDbContext : DbContext, IBuyBookDbContext
     {
         public BuyBookDbContext(DbContextOptions<BuyBookDbContext> options)
           : base(options)
