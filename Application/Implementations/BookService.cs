@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +12,25 @@ namespace Application.Implementations
         public BookService(IBuyBookDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public AuthorModel AddAuthor(AuthorModel model)
+        {
+            if (model is null) return null;
+
+            var newAuthor = new Author
+            {
+                Name = model.Name,
+                Biography = model.Biography,
+                BirthDate = model.BirthDate
+            };
+
+            _dbContext.Authors.Add(newAuthor);
+            _dbContext.SaveChanges();
+
+            model.Id = newAuthor.Id;
+
+            return model;
         }
 
         public BookModel AddBook(BookModel book)
@@ -48,6 +62,33 @@ namespace Application.Implementations
             return book;
         }
 
+        public CategoryModel CreateCategory(CategoryModel category)
+        {
+            if (category is null) return null;
+
+            var newCategory = new Category
+            {
+                Name = category.Name
+            };
+
+            _dbContext.Categories.Add(newCategory);
+            _dbContext.SaveChanges();
+
+            category.Id = newCategory.Id;
+
+            return category;
+        }
+
+        public bool DeleteAuthor(int id)
+        {
+            var author = _dbContext.Authors.FirstOrDefault(x => x.Id == id);
+
+            if (author is null) return false;
+
+            _dbContext.Authors.Remove(author);
+            return _dbContext.SaveChanges() == 1;
+        }
+
         public bool DeleteBook(int id)
         {
             var book = _dbContext.Books.FirstOrDefault(x => x.Id == id);
@@ -55,6 +96,16 @@ namespace Application.Implementations
             if (book is null) return false;
 
             _dbContext.Books.Remove(book);
+            return _dbContext.SaveChanges() == 1;
+        }
+
+        public bool DeleteCategory(int id)
+        {
+            var category = _dbContext.Categories.FirstOrDefault(x => x.Id == id);
+
+            if (category is null) return false;
+
+            _dbContext.Categories.Remove(category);
             return _dbContext.SaveChanges() == 1;
         }
 

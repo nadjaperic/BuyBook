@@ -16,5 +16,9 @@ namespace Application.Interfaces
         List<BookModel> GetAllBooks();
         BookModel GetBookById(int id);
         UpdateBookModel UpdateBook(UpdateBookModel model);
+        CategoryModel CreateCategory(CategoryModel category);
+        bool DeleteCategory(int id);
+        AuthorModel AddAuthor(AuthorModel model);
+        bool DeleteAuthor(int id);
     }
 }
