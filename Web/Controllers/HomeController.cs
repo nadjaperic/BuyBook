@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 
@@ -15,7 +16,9 @@ namespace Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            List<BookModel> books = new List<BookModel>();
+
+            return View(books);
         }
 
         public IActionResult Privacy()
