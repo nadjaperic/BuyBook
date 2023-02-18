@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class BuyBookDbContext : IdentityDbContext<IdentityUser>, IBuyBookDbContext
+    public class BuyBookDbContext : IdentityDbContext<ApplicationUser>, IBuyBookDbContext
     {
         public BuyBookDbContext(DbContextOptions<BuyBookDbContext> options)
           : base(options)

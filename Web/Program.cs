@@ -1,6 +1,5 @@
 using Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -10,15 +9,29 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddTransient<IBuyBookDbContext, BuyBookDbContext>();
+builder.Services.AddTransient(typeof(UserManager<ApplicationUser>));
 
 builder.Services.AddDbContext<BuyBookDbContext>(options =>
                      options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<BuyBookDbContext>()
         .AddDefaultTokenProviders();
 
-builder.Services.AddControllersWithViews();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.LogoutPath = "/Identity/Account/Logout";
+	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdmin", policy => policy.RequireRole("Administrator"));
+});
+
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
