@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Web.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddTransient<IBuyBookDbContext, BuyBookDbContext>();
 builder.Services.AddTransient(typeof(UserManager<ApplicationUser>));
+builder.Services.AddTransient(typeof(HttpClient));
+builder.Services.AddTransient(typeof(ApiClient));
 
 builder.Services.AddDbContext<BuyBookDbContext>(options =>
                      options.UseSqlServer(connectionString));

@@ -2,6 +2,7 @@
 using Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Helpers;
 using Web.Models;
 
 namespace Web.Controllers
@@ -9,17 +10,22 @@ namespace Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApiClient _apiClient;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApiClient client)
         {
             _logger = logger;
+            _apiClient = client;
         }
 
         public IActionResult Index()
         {
-            List<BookModel> books = new List<BookModel>();
+            HomeModel homeModel = new HomeModel();
 
-            return View(books);
+            homeModel.LastBooks = _apiClient.GetLastTenBooks().Result;
+            homeModel.FeaturedBooks = _apiClient.GetFeaturedBooks().Result;
+
+            return View(homeModel);
         }
 
         public IActionResult Privacy()

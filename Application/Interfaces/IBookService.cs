@@ -20,5 +20,7 @@ namespace Application.Interfaces
         bool DeleteCategory(int id);
         AuthorModel AddAuthor(AuthorModel model);
         bool DeleteAuthor(int id);
+        List<BookModel> GetLastTenBooks();
+        List<BookModel> GetFeaturedBooks();
     }
 }

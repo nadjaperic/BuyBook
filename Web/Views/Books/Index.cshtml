@@ -1,5 +1,5 @@
 ﻿@{
-	Layout = null;
+    Layout = null;
 }
 @using Application.Models
 @model List<BookModel>
@@ -7,91 +7,91 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>Book Store</title>
-		<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="/css/main.css" />
-	<noscript><link rel="stylesheet" href="/css/noscript.css" /></noscript>
+    <title>Book Store</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <noscript><link rel="stylesheet" href="/css/noscript.css" /></noscript>
 </head>
 <body class="is-preload">
-	<div id="wrapper">
-		<header id="header">
-			<div class="inner">
-				<a href="/Home/Index" class="logo">
-					<span class="fa fa-book"></span> <span class="title">Book Store</span>
-				</a>
-				<nav>
-					<ul>
-						<li><a href="#menu">Menu</a></li>
-					</ul>
-				</nav>
-			</div>
-		</header>
-		<nav id="menu">
-			<h2>Menu</h2>
-			<ul>
-				<li><a href="/Home/Index" class="active">Home</a></li>
-				<li><a href="/Book/Index">Books</a></li>
-				<li><a href="/Checkout/Index">Checkout</a></li>
-			</ul>
-		</nav>
-		<div id="main">
-			<div class="inner">
-				<h1>Books</h1>
+    <div id="wrapper">
+        <header id="header">
+            <div class="inner">
+                <a href="/Home/Index" class="logo">
+                    <span class="fa fa-book"></span> <span class="title">Book Store</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="#menu">Menu</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <nav id="menu">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="/Home/Index" class="active">Home</a></li>
+                <li><a href="/Books/Index">Books</a></li>
+                <li><a href="/Checkout/Index">Checkout</a></li>
+            </ul>
+        </nav>
+        <div id="main">
+            <div class="inner">
+                <h1>Books</h1>
 
-				<div class="image main">
-					<img src="/images/banner-image-6-1920x500.jpg" class="img-fluid" alt="" />
-				</div>
-				<h2 class="text-center">All books</h2>
-				<section class="tiles">
-					@{
-						Random rnd = new Random();
-						@foreach (var book in Model)
-						{
-							int index = rnd.Next(1, 7);
-							string style = "style" + index.ToString();
+                <div class="image main">
+                    <img src="/images/banner-image-6-1920x500.jpg" class="img-fluid" alt="" />
+                </div>
+                <h2 class="text-center">All books</h2>
+                <section class="tiles">
+                    @{
+                        Random rnd = new Random();
+                        @foreach (var book in Model)
+                        {
+                            int index = rnd.Next(1, 7);
+                            string style = "style" + index.ToString();
 
-									<article class="@style">
-										<span class="image">
-											<img src="@book.BookUrl" alt="" />
-										</span>
-										<a href="/Book/One?id=@book.Id">
-											<h2>@book.Title</h2>
-											<p><strong>$@book.Price</strong></p>
-											<p>@book.ShortDescription</p>
-										</a>
-									</article>
-						}
-					}
-				</section>
-			</div>
-		</div>
-		<footer id="footer">
-			<div class="inner">
-				<section>
-					<ul class="icons">
-						<li><a href="#" class="icon style2 fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon style2 fa-facebook"><span class="label">Facebook</span></a></li>
-						<li><a href="#" class="icon style2 fa-instagram"><span class="label">Instagram</span></a></li>
-						<li><a href="#" class="icon style2 fa-linkedin"><span class="label">LinkedIn</span></a></li>
-					</ul>
+                            <article class="@style">
+                                <span class="image">
+                                    <img src="@book.BookUrl" alt="" />
+                                </span>
+                                <a href="/Books/One?id=@book.Id">
+                                    <h2>@book.Title</h2>
+                                    <p><strong>$@book.Price</strong></p>
+                                    <p>@book.ShortDescription</p>
+                                </a>
+                            </article>
+                        }
+                    }
+                </section>
+            </div>
+        </div>
+        <footer id="footer">
+            <div class="inner">
+                <section>
+                    <ul class="icons">
+                        <li><a href="#" class="icon style2 fa-twitter"><span class="label">Twitter</span></a></li>
+                        <li><a href="#" class="icon style2 fa-facebook"><span class="label">Facebook</span></a></li>
+                        <li><a href="#" class="icon style2 fa-instagram"><span class="label">Instagram</span></a></li>
+                        <li><a href="#" class="icon style2 fa-linkedin"><span class="label">LinkedIn</span></a></li>
+                    </ul>
 
-					&nbsp;
-				</section>
+                    &nbsp;
+                </section>
 
-				<ul class="copyright">
-					<li>Copyright © 2022 Book Store </li>
-				</ul>
-			</div>
-		</footer>
+                <ul class="copyright">
+                    <li>Copyright © 2022 Book Store </li>
+                </ul>
+            </div>
+        </footer>
 
-	</div>
+    </div>
 
-	<script src="/lib/jquery/dist/jquery.min.js"></script>
-	<script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="/js/jquery.scrolly.min.js"></script>
-	<script src="/js/jquery.scrollex.min.js"></script>
-	<script src="/js/main.js"></script>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 </html>

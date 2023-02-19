@@ -190,6 +190,89 @@ namespace Application.Implementations
             return bookToReturn;
         }
 
+        public List<BookModel> GetFeaturedBooks()
+        {
+            var books = _dbContext.Books.Include(x => x.Publishers)
+                                         .Include(x => x.Categories)
+                                         .Include(x => x.Authors)
+                                         .Where(x => x.IsFeatured)
+                                         .Take(10)
+                                         .ToList();
+
+            var booksToReturn = books.Select(x =>
+                new BookModel
+                {
+                    Id = x.Id,
+                    BookUrl = x.BookUrl,
+                    Price = x.Price,
+                    Description = x.Description,
+                    IsFeatured = x.IsFeatured,
+                    ShortDescription = x.ShortDescription,
+                    Title = x.Title,
+                    Authors = x.Authors.Select(a => new AuthorModel
+                    {
+                        Id = a.Id,
+                        Name = a.Name
+                    }).ToList(),
+                    Publishers = x.Publishers.Select(p =>
+                    new PublisherModel
+                    {
+                        Id = p.Id,
+                        Name = p.Name
+                    }).ToList(),
+                    Categories = x.Categories.Select(c =>
+                    new CategoryModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList()
+
+                }).ToList();
+
+            return booksToReturn;
+        }
+
+        public List<BookModel> GetLastTenBooks()
+        {
+            var books = _dbContext.Books.Include(x => x.Publishers)
+                                         .Include(x => x.Categories)
+                                         .Include(x => x.Authors)
+                                         .Take(10)
+                                         .ToList();
+
+            var booksToReturn = books.Select(x =>
+                new BookModel
+                {
+                    Id = x.Id,
+                    BookUrl = x.BookUrl,
+                    Price = x.Price,
+                    Description = x.Description,
+                    IsFeatured = x.IsFeatured,
+                    ShortDescription = x.ShortDescription,
+                    Title = x.Title,
+                    Authors = x.Authors.Select(a => new AuthorModel
+                    {
+                        Id = a.Id,
+                        Name = a.Name
+                    }).ToList(),
+                    Publishers = x.Publishers.Select(p =>
+                    new PublisherModel
+                    {
+                        Id = p.Id,
+                        Name = p.Name
+                    }).ToList(),
+                    Categories = x.Categories.Select(c =>
+                    new CategoryModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList()
+
+                }).ToList();
+
+            return booksToReturn;
+        }
+
         public UpdateBookModel UpdateBook(UpdateBookModel model)
         {
             if (model == null) return null;
