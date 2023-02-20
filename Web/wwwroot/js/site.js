@@ -12,14 +12,16 @@ Site.addToCart = function(id) {
     };
 
     $.ajax({
-        url: '/Book/AddToCart',
+        url: '/Books/AddToCart',
         data: book,
         type: 'POST',
         success: function(result) {
             window.location.href = "/Checkout/Index";
         },
         error: function(err) {
-            console.log(err);
+            if (err.status == 401 || err.status == 403) {
+                window.location.href = "/Identity/Account/AccessDenied";
+            }
         }
     });
 }

@@ -31,13 +31,13 @@ namespace API.Controllers
             return _bookService.AddAuthor(model);
         }
 
-        [HttpDelete("deleteAuthor/{id}")]
+        [HttpDelete("deleteAuthor")]
         public bool DeleteAuthor(int id)
         {
             return _bookService.DeleteAuthor(id);
         }
 
-        [HttpDelete("deleteBook/{id}")]
+        [HttpDelete("deleteBook")]
         public bool DeleteBook(int id)
         {
             return _bookService.DeleteBook(id);
@@ -72,5 +72,24 @@ namespace API.Controllers
         {
             return _bookService.DeleteCategory(id);
         }
+
+        [HttpGet("getAllAuthors")]
+        public List<AuthorModel> GetAllAuthors()
+        {
+            return _bookService.GetAllAuthors();
+        }
+
+        [HttpGet("getAllPublishers")]
+        public List<PublisherModel> GetAllPublishers()
+        {
+            return _publisherService.GetAllPublishers();
+        }
+
+        [HttpGet("getAllCategories")]
+        public List<CategoryModel> GetAllCategories()
+        {
+            return _bookService.GetAllCategories();
+        }
+
     }
 }

@@ -1,0 +1,460 @@
+﻿@model AdminPanelModel
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h1>Admin Panel</h1>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 50px">
+    <div class="col-md-6">
+        <h3>All books</h3>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-primary" id="btnAddBook" onclick="Admin.openAddBook()" data-bs-toggle="modal" data-bs-target="#addUpdateBook" style="float: right">Add</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-sm table-bordered table-responsive" id="booksTable">
+            <thead class="bg-success">
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Short Description</th>
+                    <th>Price</th>
+                    <th>Categories</th>
+                    <th>Authors</th>
+                    <th>Publishers</th>
+                    <th>IsFeatured</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                @foreach (var book in Model.Books)
+                {
+                    <tr>
+                        <td>@book.Id</td>
+                        <td>@book.Title</td>
+                        <td>@book.ShortDescription</td>
+                        <td>@book.Price</td>
+                        <td>Category</td>
+                        
+                        <td>@string.Join(",", book.Authors.Select(x => x.Name))</td>
+
+                        <td>@string.Join(",", book.Publishers.Select(x => x.Name))</td>
+                        <td>@book.IsFeatured</td>
+                        <th>
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#addUpdateBook" onclick="Admin.openUpdateBook('@book.Id')">Edit</button>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal" onclick="Admin.openDeleteBook('@book.Id')">Delete</button>
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 50px">
+    <div class="col-md-6">
+        <h3>All Authors</h3>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-primary" id="btnAddAuthor" data-bs-toggle="modal" data-bs-target="#addAuthorModal" style="float: right">Add</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-sm table-bordered table-responsive" id="authorsTable">
+            <thead class="bg-warning">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Biography</th>
+                    <th>BirthDay</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="authorsTableBody">
+                @foreach (var author in Model.AllAuthors)
+                {
+                    <tr>
+                        <td>@author.Id</td>
+                        <td>@author.Name</td>
+                        <td>@author.Biography</td>
+                        <td>@author.BirthDate.ToShortDateString()</td>
+                        <th>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAuthorModal" onclick="Admin.openDeleteAuthor('@author.Id')">Delete</button>
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 50px">
+    <div class="col-md-6">
+        <h3>All Publishers</h3>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-primary" id="btnAddPublisher"  data-bs-toggle="modal" data-bs-target="#addPublisherModal" style="float: right">Add</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-sm table-bordered table-responsive" id="publishersTable">
+            <thead class="bg-danger">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Date Established</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="publishersTableBody">
+                @foreach (var publisher in Model.AllPublishers)
+                {
+                    <tr>
+                        <td>@publisher.Id</td>
+                        <td>@publisher.Name</td>
+                        <td>@publisher.Address, @publisher.City, @publisher.Country</td>
+                        <td>@publisher.DateEstablished.ToShortDateString()</td>
+                        <th>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deletePublisherModal" onclick="Admin.openDeletePublisher('@publisher.Id')">Delete</button>
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 50px">
+        <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>All Categories</h3>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-primary" id="btnAddCategories" onclick="Admin.openAddCategory()" data-bs-toggle="modal" data-bs-target="#createCategoryModal" style="float: right">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-sm table-bordered table-responsive" id="categoriesTable">
+            <thead class="bg-primary">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="categoriesTableBody">
+                @foreach (var category in Model.AllCategories)
+                {
+                    <tr>
+                        <td>@category.Id</td>
+                        <td>@category.Name</td>
+                        <th>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" onclick="Admin.openDeleteCategory('@category.Id')">Delete</button>
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteBookModal" role="dialog" aria-labelledby="deleteBookLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete book</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h5 style="margin-top: 10px; ">Do you want to delete selected book?</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="deleteBook" onclick="Admin.deleteBook()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addUpdateBook" role="dialog" aria-labelledby="addUpdateBookLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add new book</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-6">
+                        <label for="newBookTitle">Title: </label>
+                        <input type="text" id="newBookTitle" class="form-control" style="margin-top: -10px" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="newBookPrice">Price: </label>
+                        <input type="text" id="newBookPrice" class="form-control" style="margin-top: -10px" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px; padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-6">
+                        <label for="newBookAuthors">Authors: </label>
+                        <select class="form-control" multiple id="newBookAuthors" style="margin-top: -10px">
+                            @foreach (var author in Model.AllAuthors)
+                            {
+                                <option value="@author.Id">@author.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="newBookPublishers">Publishers: </label>
+                        <select class="form-control" multiple id="newBookPublishers" style="margin-top: -10px">
+                            @foreach (var publisher in Model.AllPublishers)
+                            {
+                                <option value="@publisher.Id">@publisher.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px; padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-12">
+                        <label for="newBookShortDescription">Short Description: </label>
+                        <textarea id="newBookShortDescription" class="form-control" style="margin-top: -10px"></textarea>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px; padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-12">
+                        <label for="newBookDescription">Description: </label>
+                        <textarea id="newBookDescription" class="form-control" style="margin-top: -10px"></textarea>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px; padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-6">
+                        <label for="newBookUrl">Photo Url: </label>
+                        <input type="text" id="newBookUrl" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="newBookCategory">Category: </label>
+                        <select class="form-control" multiple id="newBookCategory">
+                            @foreach (var category in Model.AllCategories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px; padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-2">
+                        <label for="newBookFeatured" class="form-check-label">Featured: </label>
+                        <select class="form-control" id="newBookFeatured">
+                            <option value="0" selected>No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="saveBook" onclick="Admin.addNewBook()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addAuthorModal" role="dialog" aria-labelledby="addAuthorModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add new author</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-6">
+                        <label for="newAuthorName">Name: </label>
+                        <input type="text" id="newAuthorName" class="form-control" style="margin-top: -10px" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="newAuthorBirthDate">Birth Date: </label>
+                        <input type="date" id="newAuthorBirthDate" class="form-control" style="margin-top: -10px" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px; padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-12">
+                        <label for="newAuthorBiography">Biography: </label>
+                        <textarea id="newAuthorBiography" class="form-control" style="margin-top: -10px"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="saveAuthor" onclick="Admin.addNewAuthor()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addPublisherModal" role="dialog" aria-labelledby="addPublisherLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add new publisher</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-6">
+                        <label for="newPublisherName">Name: </label>
+                        <input type="text" id="newPublisherName" class="form-control" style="margin-top: -10px" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="newPublisherDate">Established: </label>
+                        <input type="date" id="newPublisherDate" class="form-control" style="margin-top: -10px" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px; padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-6">
+                        <label for="newPublisherAddress">Address: </label>
+                        <input type="text" id="newPublisherAddress" class="form-control" style="margin-top: -10px" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="newPublisherCity">City: </label>
+                        <input type="text" id="newPublisherCity" class="form-control" style="margin-top: -10px" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="newPublisherCountry">Country: </label>
+                        <input type="text" id="newPublisherCountry" class="form-control" style="margin-top: -10px" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="savePublisher" onclick="Admin.addNewPublisher()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createCategoryModal" role="dialog" aria-labelledby="createCategoryLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add new book</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="padding-left: 10px !important; padding-right: 10px !important">
+                    <div class="col-md-6">
+                        <label for="newCategoryName">Name: </label>
+                        <input type="text" id="newCategoryName" class="form-control" style="margin-top: -10px" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="saveCategory" onclick="Admin.addNewCategory()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteCategoryModal" role="dialog" aria-labelledby="deleteCategoryLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete category</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h5 style="margin-top: 10px; ">Do you want to delete selected category?</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="deleteCategory" onclick="Admin.deleteCategory()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deletePublisherModal" role="dialog" aria-labelledby="deletePublisherLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete publisher</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h5 style="margin-top: 10px; ">Do you want to delete selected publisher?</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="deletePublisher" onclick="Admin.deletePublisher()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteAuthorModal" role="dialog" aria-labelledby="deleteAuthorLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete author</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h5 style="margin-top: 10px; ">Do you want to delete selected author?</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="deleteAuthor" onclick="Admin.deleteAuthor()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

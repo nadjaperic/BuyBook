@@ -3,7 +3,9 @@
 }
 @using Application.Models
 @model BookModel
-
+@{
+	var bookUrl = string.IsNullOrEmpty(Model.BookUrl) ? "/images/nobookcover.jpg" : Model.BookUrl;
+}
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -30,11 +32,13 @@
 		</header>
 		<nav id="menu">
 			<h2>Menu</h2>
-			<ul>
-				<li><a href="/Home/Index" class="active">Home</a></li>
-				<li><a href="/Book/Index">Books</a></li>
-				<li><a href="/Checkout/Index">Checkout</a></li>
-			</ul>
+			 <ul>
+                <li><a href="/Home/Index" class="active">Home</a></li>
+                <li><a href="/Books/Index">Books</a></li>
+                <li><a href="/Identity/Account/Login">Login</a></li>
+                <li><a href="/Identity/Account/Register">Register</a></li>
+                <li><a href="/Checkout/Index">Checkout</a></li>
+            </ul>
 		</nav>
 		<div id="main">
 			<div class="inner">
@@ -43,11 +47,11 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-5">
-							<img src="@Model.BookUrl" class="img-fluid" alt="">
+							<img src="@bookUrl" class="img-fluid" alt="">
 						</div>
 
 						<div class="col-md-7">
-							<h5>By: @Model.Authors</h5>
+							<h5>By: @string.Join(",", Model.Authors)</h5>
 							<p style="margin-top: 20px">@Model.Description</p>
 
 							<div class="row">

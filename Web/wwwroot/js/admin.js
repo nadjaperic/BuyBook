@@ -1,6 +1,9 @@
 ﻿var Admin = {
     IsUpdate: false,
-    CurrentBookId: ''
+    CurrentBookId: '',
+    CurrentCategoryId: '',
+    CurrentPublisherId: '',
+    CurrentAuthorId: ''
 }
 
 Admin.openUpdateBook = function(id) {
@@ -11,13 +14,22 @@ Admin.openUpdateBook = function(id) {
 }
 
 Admin.openDeleteBook = function(id) {
-
     Admin.CurrentBookId = id;
 }
 
+Admin.openDeleteCategory = function(id) {
+    Admin.CurrentCategoryId = id;
+}
+
+Admin.openDeletePublisher = function(id) {
+    Admin.CurrentPublisherId = id;
+}
+
+Admin.openDeleteAuthor = function(id) {
+    Admin.CurrentAuthorId = id;
+}
+
 Admin.openAddBook = function() {
-
-
     Admin.IsUpdate = false;
     $("#newBookTitle").val('');
     $("#newBookPrice").val('');
@@ -70,11 +82,12 @@ Admin.addNewBook = function() {
     var title = $("#newBookTitle").val();
     var price = $("#newBookPrice").val();
     var authors = $("#newBookAuthors").val();
+    var publishers = $("#newBookPublishers").val();
     var shortDescription = $("#newBookShortDescription").val();
     var description = $("#newBookDescription").val();
     var url = $("#newBookUrl").val();
-    var category = $("#newBookCategory").val();
-    var isFeatured = $("#newBookFeatured")[0].checked;
+    var categories = $("#newBookCategory").val();
+    var isFeatured = $("#newBookFeatured").val() == '1';
 
     if (Admin.IsUpdate) {
 
@@ -83,16 +96,17 @@ Admin.addNewBook = function() {
             Id: id,
             Title: title,
             Price: price,
-            Authors: authors,
+            AuthorsIds: authors,
+            PublishersIds: publishers,
+            CategoriesIds: categories,
             ShortDescription: shortDescription,
             Description: description,
             BookUrl: url,
-            Category: category,
             IsFeatured: isFeatured
         };
 
         $.ajax({
-            url: '/Book/UpdateBook',
+            url: '/Admin/UpdateBook',
             data: book,
             type: 'POST',
             success: function(result) {
@@ -109,16 +123,17 @@ Admin.addNewBook = function() {
         var book = {
             Title: title,
             Price: price,
-            Authors: authors,
+            AuthorsIds: authors,
+            PublishersIds: publishers,
+            CategoriesIds: categories,
             ShortDescription: shortDescription,
             Description: description,
             BookUrl: url,
-            Category: category,
             IsFeatured: isFeatured
         };
 
         $.ajax({
-            url: '/Book/CreateBook',
+            url: '/Admin/AddBook',
             data: book,
             type: 'POST',
             success: function(result) {
@@ -129,4 +144,127 @@ Admin.addNewBook = function() {
             }
         });
     }
+}
+
+Admin.addNewCategory = function() {
+
+    var name = $("#newCategoryName").val();
+
+    var model = {
+        Name: name
+    };
+
+    $.ajax({
+        url: '/Admin/CreateCategory',
+        data: model,
+        type: 'POST',
+        success: function(result) {
+            window.location.reload();
+        },
+        error: function(err) {
+            console.log(err);
+            window.location.reload();
+        }
+    });
+}
+
+Admin.deleteCategory = function() {
+
+    $.ajax({
+        url: '/Admin/DeleteCategory?id=' + Admin.CurrentCategoryId,
+        type: 'DELETE',
+        success: function(result) {
+            window.location.reload();
+        },
+        error: function(err) {
+            console.log(err);
+            window.location.reload();
+        }
+    });
+}
+
+Admin.deletePublisher = function() {
+
+    $.ajax({
+        url: '/Admin/DeletePublisher?id=' + Admin.CurrentPublisherId,
+        type: 'DELETE',
+        success: function(result) {
+            window.location.reload();
+        },
+        error: function(err) {
+            console.log(err);
+            window.location.reload();
+        }
+    });
+}
+
+Admin.deleteAuthor = function() {
+
+    $.ajax({
+        url: '/Admin/DeleteAuthor?id=' + Admin.CurrentAuthorId,
+        type: 'DELETE',
+        success: function(result) {
+            window.location.reload();
+        },
+        error: function(err) {
+            console.log(err);
+            window.location.reload();
+        }
+    });
+}
+
+Admin.addNewPublisher = function() {
+
+    var name = $("#newPublisherName").val();
+    var date = $("#newPublisherDate").val();
+    var address = $("#newPublisherAddress").val();
+    var city = $("#newPublisherCity").val();
+    var country = $("#newPublisherCountry").val();
+
+    var model = {
+        Name: name,
+        DateEstablished: date,
+        Address: address,
+        City: city,
+        Country: country
+    };
+
+    $.ajax({
+        url: '/Admin/AddPublisher',
+        data: model,
+        type: 'POST',
+        success: function(result) {
+            window.location.reload();
+        },
+        error: function(err) {
+            console.log(err);
+            window.location.reload();
+        }
+    });
+}
+
+Admin.addNewAuthor = function() {
+
+    var name = $("#newAuthorName").val();
+    var birthDate = $("#newAuthorBirthDate").val();
+    var biography = $("#newAuthorBiography").val();
+
+    var model = {
+        Name: name,
+        BirthDate: birthDate,
+        Biography: biography
+    };
+
+    $.ajax({
+        url: '/Admin/AddAuthor',
+        data: model,
+        type: 'POST',
+        success: function(result) {
+            window.location.reload();
+        },
+        error: function(err) {
+            console.log(err);
+            window.location.reload();
+        }
+    });
 }

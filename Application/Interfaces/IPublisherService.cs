@@ -11,5 +11,6 @@ namespace Application.Interfaces
     {
         PublisherModel AddPublisher(PublisherModel model);
         bool DeletePublisher(int id);
+        List<PublisherModel> GetAllPublishers();
     }
 }

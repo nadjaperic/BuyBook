@@ -6,8 +6,9 @@
         public string Title { get; set; }
         public string ShortDescription { get; set; }
         public string Description { get; set; }
+        public int Quantity { get; set; }
         public double Price { get; set; }
-        public string BookUrl { get; set; }
+		public string BookUrl { get; set; }
         public bool IsFeatured { get; set; }
         public List<int> AuthorsIds { get; set; }
         public List<int> PublishersIds { get; set; }

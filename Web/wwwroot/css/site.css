@@ -2,6 +2,11 @@ html {
   font-size: 14px;
 }
 
+.custom-btn {
+    background-color: #f2849e !important;
+    border-color: #f2849e !important;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;

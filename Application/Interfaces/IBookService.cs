@@ -22,5 +22,7 @@ namespace Application.Interfaces
         bool DeleteAuthor(int id);
         List<BookModel> GetLastTenBooks();
         List<BookModel> GetFeaturedBooks();
+        List<AuthorModel> GetAllAuthors();
+        List<CategoryModel> GetAllCategories();
     }
 }

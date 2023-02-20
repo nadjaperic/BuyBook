@@ -48,5 +48,20 @@ namespace Application.Implementations
             _dbContext.Publishers.Remove(publisher);
             return _dbContext.SaveChanges() == 1;
         }
+
+        public List<PublisherModel> GetAllPublishers()
+        {
+            var allPublishers = _dbContext.Publishers.ToList();
+
+            return allPublishers.Select(x => new PublisherModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Address = x.Address,
+                City = x.City,
+                Country = x.Country,
+                DateEstablished = x.DateEstablished
+            }).ToList();
+        }
     }
 }

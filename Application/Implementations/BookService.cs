@@ -37,9 +37,9 @@ namespace Application.Implementations
         {
             if (book is null) return null;
 
-            var authors = book.AuthorsIds != null ? _dbContext.Authors.Where(x => book.AuthorsIds.Contains(x.Id)).ToList() : Enumerable.Empty<Author>();
-            var publishers = book.PublishersIds != null ? _dbContext.Publishers.Where(x => book.PublishersIds.Contains(x.Id)).ToList() : Enumerable.Empty<Publisher>();
-            var categories = book.CategoriesIds != null ? _dbContext.Categories.Where(x => book.CategoriesIds.Contains(x.Id)).ToList() : Enumerable.Empty<Category>();
+            var authors = book.AuthorsIds != null ? _dbContext.Authors.Where(x => book.AuthorsIds.Contains(x.Id)).ToList() : new List<Author>();
+            var publishers = book.PublishersIds != null ? _dbContext.Publishers.Where(x => book.PublishersIds.Contains(x.Id)).ToList() : new List<Publisher>();
+            var categories = book.CategoriesIds != null ? _dbContext.Categories.Where(x => book.CategoriesIds.Contains(x.Id)).ToList() : new List<Category>();
 
             var bookToAdd = new Book
             {
@@ -109,6 +109,19 @@ namespace Application.Implementations
             return _dbContext.SaveChanges() == 1;
         }
 
+        public List<AuthorModel> GetAllAuthors()
+        {
+            var allAuthors = _dbContext.Authors.ToList();
+
+            return allAuthors.Select(x => new AuthorModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Biography = x.Biography,
+                BirthDate = x.BirthDate
+            }).ToList();
+        }
+
         public List<BookModel> GetAllBooks()
         {
             var books = _dbContext.Books.Include(x => x.Publishers)
@@ -148,6 +161,18 @@ namespace Application.Implementations
 
             return booksToReturn;
         }
+
+        public List<CategoryModel> GetAllCategories()
+        {
+            var allCategories = _dbContext.Categories.ToList();
+
+            return allCategories.Select(x => new CategoryModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+            }).ToList();
+        }
+
 
         public BookModel GetBookById(int id)
         {
@@ -288,9 +313,9 @@ namespace Application.Implementations
             book.BookUrl = model.BookUrl;
             book.IsFeatured = model.IsFeatured;
 
-            var authors = model.AuthorsIds != null ? _dbContext.Authors.Where(x => model.AuthorsIds.Contains(x.Id)).ToList() : Enumerable.Empty<Author>();
-            var publishers = model.PublishersIds != null ? _dbContext.Publishers.Where(x => model.PublishersIds.Contains(x.Id)).ToList() : Enumerable.Empty<Publisher>();
-            var categories = model.CategoriesIds != null ? _dbContext.Categories.Where(x => model.CategoriesIds.Contains(x.Id)).ToList() : Enumerable.Empty<Category>();
+            var authors = model.AuthorsIds != null ? _dbContext.Authors.Where(x => model.AuthorsIds.Contains(x.Id)).ToList() : new List<Author>();
+            var publishers = model.PublishersIds != null ? _dbContext.Publishers.Where(x => model.PublishersIds.Contains(x.Id)).ToList() : new List<Publisher>();
+            var categories = model.CategoriesIds != null ? _dbContext.Categories.Where(x => model.CategoriesIds.Contains(x.Id)).ToList() : new List<Category>();
 
             book.Authors = authors.ToList();
             book.Publishers = publishers.ToList();

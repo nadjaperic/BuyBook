@@ -32,6 +32,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireAdmin", policy => policy.RequireRole("Administrator"));
+    options.AddPolicy("RequireUser", policy => policy.RequireRole("User"));
 });
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
