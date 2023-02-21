@@ -44,7 +44,7 @@ namespace API.Controllers
         }
 
         [HttpPut("updateBook")]
-        public UpdateBookModel UpdateBook(UpdateBookModel model)
+        public bool UpdateBook(UpdateBookModel model)
         {
             return _bookService.UpdateBook(model);
         }

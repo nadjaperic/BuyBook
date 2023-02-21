@@ -15,7 +15,7 @@ namespace Application.Interfaces
         bool DeleteBook(int id);
         List<BookModel> GetAllBooks();
         BookModel GetBookById(int id);
-        UpdateBookModel UpdateBook(UpdateBookModel model);
+        bool UpdateBook(UpdateBookModel model);
         CategoryModel CreateCategory(CategoryModel category);
         bool DeleteCategory(int id);
         AuthorModel AddAuthor(AuthorModel model);
@@ -24,5 +24,7 @@ namespace Application.Interfaces
         List<BookModel> GetFeaturedBooks();
         List<AuthorModel> GetAllAuthors();
         List<CategoryModel> GetAllCategories();
+        List<BookModel> GetBooksByIds(List<int> ids);
+        List<BookModel> SearchBooks(string searchTerm);
     }
 }

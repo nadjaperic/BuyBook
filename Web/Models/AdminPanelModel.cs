@@ -8,5 +8,6 @@ namespace Web.Models
         public List<AuthorModel> AllAuthors { get; set; }
         public List<CategoryModel> AllCategories { get; set; }
         public List<PublisherModel> AllPublishers { get; set; }
+        public List<UserModel> AllAdmins { get; set; }
     }
 }

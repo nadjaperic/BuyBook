@@ -3,7 +3,8 @@
     CurrentBookId: '',
     CurrentCategoryId: '',
     CurrentPublisherId: '',
-    CurrentAuthorId: ''
+    CurrentAuthorId: '',
+    CurrentAdminId: ''
 }
 
 Admin.openUpdateBook = function(id) {
@@ -15,6 +16,10 @@ Admin.openUpdateBook = function(id) {
 
 Admin.openDeleteBook = function(id) {
     Admin.CurrentBookId = id;
+}
+
+Admin.openDeleteAdmin = function(id) {
+    Admin.CurrentAdminId = id;
 }
 
 Admin.openDeleteCategory = function(id) {
@@ -44,17 +49,30 @@ Admin.openAddBook = function() {
 Admin.getBookForModal = function(id) {
 
     $.ajax({
-        url: '/Book/GetBook?id=' + id,
+        url: '/Admin/GetBook?id=' + id,
         type: 'GET',
         success: function(result) {
             $("#newBookTitle").val(result.title);
-           $("#newBookPrice").val(result.price);
-            $("#newBookAuthors").val(result.authors);
+            $("#newBookPrice").val(result.price);
             $("#newBookShortDescription").val(result.shortDescription);
             $("#newBookDescription").val(result.description);
             $("#newBookUrl").val(result.bookUrl);
-            $("#newBookCategory").val(result.categoryInt);
-            $("#newBookFeatured").attr('checked', result.isFeatured);
+            $("#newBookFeatured").val(result.isFeatured == true ? 1 : 0);
+
+            var authorIds = result.authors.map(a => a.id);
+            for (var i = 0; i < authorIds.length; i++) {
+                $("#newBookAuthors").find("option[value=" + authorIds[i] + "]").prop("selected", "selected");
+            }
+           
+            var categoriesIds = result.categories.map(a => a.id);
+            for (var i = 0; i < categoriesIds.length; i++) {
+                $("#newBookCategory").find("option[value=" + categoriesIds[i] + "]").prop("selected", "selected");
+            }
+
+            var publishersIds = result.publishers.map(a => a.id);
+            for (var i = 0; i < publishersIds.length; i++) {
+                $("#newBookPublishers").find("option[value=" + publishersIds[i] + "]").prop("selected", "selected");
+            }
         },
         error: function(err) {
             console.log(err);
@@ -65,7 +83,7 @@ Admin.getBookForModal = function(id) {
 Admin.deleteBook = function() {
 
     $.ajax({
-        url: '/Book/DeleteBook?id=' + Admin.CurrentBookId,
+        url: '/Admin/DeleteBook?id=' + Admin.CurrentBookId,
         type: 'DELETE',
         success: function(result) {
             window.location.reload();
@@ -168,10 +186,51 @@ Admin.addNewCategory = function() {
     });
 }
 
+Admin.addNewAdmin = function() {
+
+    var email = $("#newAdminEmail").val();
+    var firstName = $("#newAdminFirstName").val();
+    var lastName = $("#newAdminLastName").val();
+
+    var model = {
+        Email: email,
+        FirstName: firstName,
+        LastName: lastName
+    };
+
+    $.ajax({
+        url: '/Admin/AddAdmin',
+        data: model,
+        type: 'POST',
+        success: function(result) {
+            window.location.reload();
+        },
+        error: function(err) {
+            console.log(err);
+            window.location.reload();
+        }
+    });
+}
+
 Admin.deleteCategory = function() {
 
     $.ajax({
         url: '/Admin/DeleteCategory?id=' + Admin.CurrentCategoryId,
+        type: 'DELETE',
+        success: function(result) {
+            window.location.reload();
+        },
+        error: function(err) {
+            console.log(err);
+            window.location.reload();
+        }
+    });
+}
+
+Admin.deleteAdmin = function() {
+
+    $.ajax({
+        url: '/Admin/DeleteAdmin?id=' + Admin.CurrentAdminId,
         type: 'DELETE',
         success: function(result) {
             window.location.reload();

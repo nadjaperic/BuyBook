@@ -39,11 +39,9 @@
                         <td>@book.Title</td>
                         <td>@book.ShortDescription</td>
                         <td>@book.Price</td>
-                        <td>Category</td>
-                        
-                        <td>@string.Join(",", book.Authors.Select(x => x.Name))</td>
-
-                        <td>@string.Join(",", book.Publishers.Select(x => x.Name))</td>
+                        <td>@string.Join(", ", book.Categories.Select(x => x.Name))</td>
+                        <td>@string.Join(", ", book.Authors.Select(x => x.Name))</td>
+                        <td>@string.Join(", ", book.Publishers.Select(x => x.Name))</td>
                         <td>@book.IsFeatured</td>
                         <th>
                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#addUpdateBook" onclick="Admin.openUpdateBook('@book.Id')">Edit</button>
@@ -100,7 +98,7 @@
         <h3>All Publishers</h3>
     </div>
     <div class="col-md-6">
-        <button class="btn btn-primary" id="btnAddPublisher"  data-bs-toggle="modal" data-bs-target="#addPublisherModal" style="float: right">Add</button>
+        <button class="btn btn-primary" id="btnAddPublisher" data-bs-toggle="modal" data-bs-target="#addPublisherModal" style="float: right">Add</button>
     </div>
 </div>
 
@@ -135,7 +133,7 @@
 </div>
 
 <div class="row" style="margin-top: 50px">
-        <div class="col-md-4">
+    <div class="col-md-4">
         <div class="row">
             <div class="col-md-6">
                 <h3>All Categories</h3>
@@ -165,6 +163,47 @@
                         <td>@category.Name</td>
                         <th>
                             <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" onclick="Admin.openDeleteCategory('@category.Id')">Delete</button>
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<hr />
+
+<div class="row" style="margin-top: 50px">
+    <div class="col-md-6">
+        <h3>All Admins</h3>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-primary" id="btnAddBook" onclick="Admin.openAddAdmin()" data-bs-toggle="modal" data-bs-target="#addAdminModal" style="float: right">Add</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-sm table-bordered table-responsive" id="adminsTable">
+            <thead class="bg-success">
+                <tr>
+                    <th>Id</th>
+                    <th>Email</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="adminsTableBody">
+                @foreach (var user in Model.AllAdmins)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.Email</td>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <th>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAdminModal" onclick="Admin.openDeleteAdmin('@user.Id')">Delete</button>
                         </th>
                     </tr>
                 }
@@ -454,6 +493,71 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-danger" id="deleteAuthor" onclick="Admin.deleteAuthor()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addAdminModal" role="dialog" aria-labelledby="addAdminLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add new administrator</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row text-center">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <label for="newAdminEmail">Email: </label>
+                        <input type="email" id="newAdminEmail" class="form-control" style="margin-top: -20px" />
+                    </div>
+                </div>
+                <div class="row text-center" style="margin-top: 20px">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <label for="newAdminFirstName">First Name: </label>
+                        <input type="text" id="newAdminFirstName" class="form-control" style="margin-top: -20px" />
+                    </div>
+                </div>
+                <div class="row text-center" style="margin-top: 20px">
+                    <div class="col-md-3"></div>
+
+                    <div class="col-md-6">
+                        <label for="newAdminLastName">Last Name: </label>
+                        <input type="text" id="newAdminLastName" class="form-control" style="margin-top: -20px" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="saveAdmin" onclick="Admin.addNewAdmin()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteAdminModal" role="dialog" aria-labelledby="deleteAdminLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete admin</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h5 style="margin-top: 10px; ">Do you want to delete selected admin?</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="deleteAdmin" onclick="Admin.deleteAdmin()">Delete</button>
             </div>
         </div>
     </div>

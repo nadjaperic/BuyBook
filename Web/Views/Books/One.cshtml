@@ -1,108 +1,150 @@
 ﻿@{
-	Layout = null;
+    Layout = null;
 }
-@using Application.Models
-@model BookModel
+@model BooksPageModel
 @{
-	var bookUrl = string.IsNullOrEmpty(Model.BookUrl) ? "/images/nobookcover.jpg" : Model.BookUrl;
+    var bookUrl = string.IsNullOrEmpty(Model.Book.BookUrl) ? "/images/nobookcover.jpg" : Model.Book.BookUrl;
 }
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>Book Store</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="/css/main.css" />
-	<noscript><link rel="stylesheet" href="/css/noscript.css" /></noscript>
+    <title>Book Store</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <noscript><link rel="stylesheet" href="/css/noscript.css" /></noscript>
 </head>
 <body class="is-preload">
-	<div id="wrapper">
-		<header id="header">
-			<div class="inner">
-				<a href="/Home/Index" class="logo">
-					<span class="fa fa-book"></span> <span class="title">Book Store</span>
-				</a>
-				<nav>
-					<ul>
-						<li><a href="#menu">Menu</a></li>
-					</ul>
-				</nav>
-			</div>
-		</header>
-		<nav id="menu">
-			<h2>Menu</h2>
-			 <ul>
+    <div id="wrapper">
+        <header id="header">
+            <div class="inner">
+                <a href="/Home/Index" class="logo">
+                    <span class="fa fa-book"></span> <span class="title">Book Store</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="#menu">Menu</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <nav id="menu">
+            @if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <h5>Welcome @User.Identity.Name</h5>
+            }
+            <h2>Menu</h2>
+            <ul>
                 <li><a href="/Home/Index" class="active">Home</a></li>
                 <li><a href="/Books/Index">Books</a></li>
-                <li><a href="/Identity/Account/Login">Login</a></li>
-                <li><a href="/Identity/Account/Register">Register</a></li>
-                <li><a href="/Checkout/Index">Checkout</a></li>
+                @if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Administrator"))
+                    {
+                        <li><a href="/Admin/Index">Admin Panel</a></li>
+                    }
+                    <li><a href="/Identity/Account/Logout">Logout</a></li>
+                    <li><a href="/Checkout/Index">Checkout</a></li>
+                }
+                else
+                {
+                    <li><a href="/Identity/Account/Login">Login</a></li>
+                    <li><a href="/Identity/Account/Register">Register</a></li>
+                }
             </ul>
-		</nav>
-		<div id="main">
-			<div class="inner">
-				<h1>@Model.Title<span class="pull-right"> $@Model.Price</span></h1>
+        </nav>
+        <div id="main">
+            <div class="inner">
+                <h1>
+                    @Model.Book.Title<span class="pull-right">
+                        <select id="currencyConverter" class="form-control" onchange="Site.convertCurrency()">
+                            @foreach (var currency in Model.ExchangeRateData.Data.Keys)
+                            {
+                                var value = Model.ExchangeRateData.Data[currency];
+                                @if (currency == "USD")
+                                {
+                                    <option value="@value" selected>@currency</option>
+                                }
+                                else
+                                {
+                                    <option value="@value">@currency</option>
+                                }
+                            }
+                        </select> <span id="bookPrice"> @Model.Book.Price</span>
+                        <label style="display: none" id="bookPriceUSD">@Model.Book.Price</label>
+                    </span>
+                </h1>
+                <div class="pull-right">
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <img src="@bookUrl" class="img-fluid" alt="">
+                        </div>
 
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-md-5">
-							<img src="@bookUrl" class="img-fluid" alt="">
-						</div>
+                        <div class="col-md-7">
+                            <h5>By: <span class="text-danger"> @string.Join(",", Model.Book.Authors.Select(x=> x.Name).ToList())</span></h5>
+                            <h5 style="margin-top: -20px">
+                                Categories:
+                                <span class="text-danger"> @string.Join(",", Model.Book.Categories.Select(x=> x.Name).ToList())</span>
+                            </h5>
+                            <h5 style="margin-top: -20px">
+                                Published By:<span class="text-danger">
+                                    @string.Join(",", Model.Book.Publishers.Select(x=> x.Name).ToList())
+                                </span>
+                            </h5>
+                            <p style="margin-top: 20px">@Model.Book.Description</p>
 
-						<div class="col-md-7">
-							<h5>By: @string.Join(",", Model.Authors)</h5>
-							<p style="margin-top: 20px">@Model.Description</p>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <label class="control-label">Quantity</label>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <input type="text" name="quantity" id="quantity">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="button" class="btn btn-primary" onclick="Site.addToCart('@Model.Book.Id')" value="Add to Cart" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
 
-							<div class="row">
-								<div class="col-sm-8">
-									<label class="control-label">Quantity</label>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<input type="text" name="quantity" id="quantity">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<input type="button" class="primary" onclick="Site.addToCart('@Model.Id')" value="Add to Cart" />
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<br>
-				<br>
-			</div>
-		</div>
+        <footer id="footer">
+            <div class="inner">
+                <section>
+                    <ul class="icons">
+                        <li><a href="#" class="icon style2 fa-twitter"><span class="label">Twitter</span></a></li>
+                        <li><a href="#" class="icon style2 fa-facebook"><span class="label">Facebook</span></a></li>
+                        <li><a href="#" class="icon style2 fa-instagram"><span class="label">Instagram</span></a></li>
+                        <li><a href="#" class="icon style2 fa-linkedin"><span class="label">LinkedIn</span></a></li>
+                    </ul>
 
-		<footer id="footer">
-			<div class="inner">
-				<section>
-					<ul class="icons">
-						<li><a href="#" class="icon style2 fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon style2 fa-facebook"><span class="label">Facebook</span></a></li>
-						<li><a href="#" class="icon style2 fa-instagram"><span class="label">Instagram</span></a></li>
-						<li><a href="#" class="icon style2 fa-linkedin"><span class="label">LinkedIn</span></a></li>
-					</ul>
+                    &nbsp;
+                </section>
 
-					&nbsp;
-				</section>
+                <ul class="copyright">
+                    <li>Copyright © 2022 Book Store </li>
+                </ul>
+            </div>
+        </footer>
 
-				<ul class="copyright">
-					<li>Copyright © 2022 Book Store </li>
-				</ul>
-			</div>
-		</footer>
+    </div>
 
-	</div>
-
-	<script src="/lib/jquery/dist/jquery.min.js"></script>
-	<script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="/js/jquery.scrolly.min.js"></script>
-	<script src="/js/jquery.scrollex.min.js"></script>
-	<script src="/js/main.js"></script>
-	<script src="/js/site.js"></script>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/site.js"></script>
 </body>
 </html>

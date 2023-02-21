@@ -1,34 +1,48 @@
 ﻿using Application.Models;
+using Infrastructure.Currency;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Web.Helpers;
+using Web.Models;
 
 namespace Web.Controllers
 {
+	[AllowAnonymous]
 	public class BooksController : Controller
 	{
 		private readonly ApiClient _client;
 		private static string SessionKey = "BooksToCheckoutIds";
+		private readonly CurrencyService _currencyService;
 
-		public BooksController(ApiClient client)
+		public BooksController(ApiClient client, CurrencyService currencyService)
         {
             _client = client;
+			_currencyService = currencyService;
         }
 
-        [Authorize(Policy = "RequireAdmin")]
 		public IActionResult Index()
 		{
-			List<BookModel> books = new List<BookModel>();
+			List<BookModel> books = _client.GetAllBooks().Result;
 
 			return View(books);
 		}
 
-        public async Task<IActionResult> One(string id)
+        public IActionResult SearchResult(string searchTerm)
         {
-            BookModel book = _client.GetBook(id).Result;
+            List<BookModel> books = _client.SearchBooks(searchTerm).Result;
 
-            return View(book);
+            return View(books);
+        }
+
+        public async Task<IActionResult> One(int id)
+        {
+			BooksPageModel booksPageModel = new BooksPageModel();
+
+            booksPageModel.Book = _client.GetBook(id).Result;
+			booksPageModel.ExchangeRateData = _currencyService.ListAllCurrencies();
+
+            return View(booksPageModel);
         }
 
 		private static List<BookInCartModel> GetBooksIds(ISession session, string key)

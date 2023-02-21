@@ -28,6 +28,19 @@ namespace API.Controllers
             return _bookService.GetLastTenBooks();
         }
 
+        [HttpGet("searchBooks")]
+        public List<BookModel> SearchBooks(string searchTerm)
+        {
+            return _bookService.SearchBooks(searchTerm);
+        }
+
+        [HttpPost("getBooksByIds")]
+        public List<BookModel> GetBooksByIds(List<int> ids)
+        {
+            return _bookService.GetBooksByIds(ids);
+        }
+
+
         [HttpGet("getFeaturedBooks")]
         public List<BookModel> GetFeaturedBooks()
         {

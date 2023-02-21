@@ -25,13 +25,28 @@
 			</div>
 		</header>
 		<nav id="menu">
+			@if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+			{
+				<h5>Welcome @User.Identity.Name</h5>
+			}
 			<h2>Menu</h2>
 			<ul>
 				<li><a href="/Home/Index" class="active">Home</a></li>
 				<li><a href="/Books/Index">Books</a></li>
-				<li><a href="/Identity/Account/Login">Login</a></li>
-				<li><a href="/Identity/Account/Register">Register</a></li>
-				<li><a href="/Checkout/Index">Checkout</a></li>
+				@if(User != null && User.Identity != null && User.Identity.IsAuthenticated)
+				{
+					if (User.IsInRole("Administrator"))
+                    {
+                        <li><a href="/Admin/Index">Admin Panel</a></li>
+                    }
+					<li><a href="/Identity/Account/Logout">Logout</a></li>
+					<li><a href="/Checkout/Index">Checkout</a></li>
+				}
+				else
+				{
+					<li><a href="/Identity/Account/Login">Login</a></li>
+					<li><a href="/Identity/Account/Register">Register</a></li>
+				}
 			</ul>
 		</nav>
     <div class="container">

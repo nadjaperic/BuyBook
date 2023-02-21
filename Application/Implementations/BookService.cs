@@ -215,6 +215,47 @@ namespace Application.Implementations
             return bookToReturn;
         }
 
+        public List<BookModel> GetBooksByIds(List<int> ids)
+        {
+            var books = _dbContext.Books.Include(x => x.Publishers)
+                                         .Include(x => x.Categories)
+                                         .Include(x => x.Authors)
+                                         .Where(x => ids.Contains(x.Id))
+                                         .ToList();
+
+            var booksToReturn = books.Select(x =>
+                new BookModel
+                {
+                    Id = x.Id,
+                    BookUrl = x.BookUrl,
+                    Price = x.Price,
+                    Description = x.Description,
+                    IsFeatured = x.IsFeatured,
+                    ShortDescription = x.ShortDescription,
+                    Title = x.Title,
+                    Authors = x.Authors.Select(a => new AuthorModel
+                    {
+                        Id = a.Id,
+                        Name = a.Name
+                    }).ToList(),
+                    Publishers = x.Publishers.Select(p =>
+                    new PublisherModel
+                    {
+                        Id = p.Id,
+                        Name = p.Name
+                    }).ToList(),
+                    Categories = x.Categories.Select(c =>
+                    new CategoryModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList()
+
+                }).ToList();
+
+            return booksToReturn;
+        }
+
         public List<BookModel> GetFeaturedBooks()
         {
             var books = _dbContext.Books.Include(x => x.Publishers)
@@ -298,13 +339,58 @@ namespace Application.Implementations
             return booksToReturn;
         }
 
-        public UpdateBookModel UpdateBook(UpdateBookModel model)
+        public List<BookModel> SearchBooks(string searchTerm)
         {
-            if (model == null) return null;
+            var books = _dbContext.Books.Include(x => x.Publishers)
+                                         .Include(x => x.Categories)
+                                         .Include(x => x.Authors)
+                                         .Where(x => x.Title.ToLower().Contains(searchTerm.ToLower()))
+                                         .ToList();
 
-            var book = _dbContext.Books.FirstOrDefault(x => x.Id == model.Id);
+            var booksToReturn = books.Select(x =>
+                new BookModel
+                {
+                    Id = x.Id,
+                    BookUrl = x.BookUrl,
+                    Price = x.Price,
+                    Description = x.Description,
+                    IsFeatured = x.IsFeatured,
+                    ShortDescription = x.ShortDescription,
+                    Title = x.Title,
+                    Authors = x.Authors.Select(a => new AuthorModel
+                    {
+                        Id = a.Id,
+                        Name = a.Name
+                    }).ToList(),
+                    Publishers = x.Publishers.Select(p =>
+                    new PublisherModel
+                    {
+                        Id = p.Id,
+                        Name = p.Name
+                    }).ToList(),
+                    Categories = x.Categories.Select(c =>
+                    new CategoryModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList()
 
-            if (book == null) return null;
+                }).ToList();
+
+            return booksToReturn;
+        }
+
+        public bool UpdateBook(UpdateBookModel model)
+        {
+            if (model == null) return false;
+
+            var book = _dbContext.Books
+                                 .Include(x => x.Authors)
+                                 .Include(x => x.Publishers)
+                                 .Include(x => x.Categories)
+                                 .FirstOrDefault(x => x.Id == model.Id);
+
+            if (book == null) return false;
 
             book.ShortDescription = model.ShortDescription;
             book.Title = model.Title;
@@ -321,7 +407,7 @@ namespace Application.Implementations
             book.Publishers = publishers.ToList();
             book.Categories = categories.ToList();
 
-            return _dbContext.SaveChanges() == 1 ? model : null;
+            return _dbContext.SaveChanges() == 1;
         }
     }
 }

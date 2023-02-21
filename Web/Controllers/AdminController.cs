@@ -3,17 +3,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Helpers;
 using Web.Models;
+using Web.Service;
 
 namespace Web.Controllers
 {
-	[AllowAnonymous]
-	public class AdminController : Controller
+    [Authorize(Policy = "RequireAdmin")]
+    public class AdminController : Controller
 	{
         private readonly ApiClient _client;
+        private readonly UserManagementService _userService;
 
-        public AdminController(ApiClient client)
+        public AdminController(ApiClient client, UserManagementService userService)
         {
             _client = client;
+            _userService = userService;
         }
 
         public IActionResult Index()
@@ -25,11 +28,17 @@ namespace Web.Controllers
 			model.AllAuthors= _client.GetAllAuthors().Result;
 			model.AllPublishers = _client.GetAllPublishers().Result;
 			model.AllCategories = _client.GetAllCategories().Result;
+            model.AllAdmins = _userService.GetAllAdmins();
 
 			return View(model);
 		}
 
-		public CategoryModel CreateCategory(CategoryModel model)
+        public bool AddAdmin(UserModel admin)
+        {
+            return _userService.AddNewAdmin(admin);
+        }
+
+        public CategoryModel CreateCategory(CategoryModel model)
 		{
 			return _client.CreateCategory(model).Result;
 		}
@@ -48,6 +57,21 @@ namespace Web.Controllers
             return _client.AddBook(model).Result;
         }
 
+        public BookModel GetBook(int id)
+        {
+            return _client.GetBook(id).Result;
+        }
+
+        public bool UpdateBook(BookModel model)
+        {
+            return _client.UpdateBook(model).Result;
+        }
+
+        public bool DeleteBook(int id)
+        {
+            return _client.DeleteBook(id).Result;
+        }
+
         public bool DeleteCategory(int id)
         {
             return _client.DeleteCategory(id).Result;
@@ -61,6 +85,11 @@ namespace Web.Controllers
         public bool DeleteAuthor(int id)
         {
             return _client.DeleteAuthor(id).Result;
+        }
+
+        public bool DeleteAdmin(string id)
+        {
+            return _userService.DeleteAdmin(id);
         }
     }
 }

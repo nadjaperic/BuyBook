@@ -110,7 +110,7 @@ namespace Web.Helpers
             return books;
         }
 
-        public async Task<BookModel> GetBook(string id)
+        public async Task<BookModel> GetBook(int id)
         {
             string path = _client.BaseAddress + $"Book/getBook/{id}";
 
@@ -236,6 +236,85 @@ namespace Web.Helpers
             }
 
             return bookModel;
+        }
+
+        public async Task<bool> DeleteBook(int id)
+        {
+            string path = _client.BaseAddress + $"Admin/deleteBook?id=" + id;
+
+            HttpResponseMessage response = await _client.DeleteAsync(path);
+
+            bool successfully = false;
+
+            if (response.IsSuccessStatusCode)
+            {
+                successfully = await response.Content.ReadFromJsonAsync<bool>();
+            }
+
+            return successfully;
+        }
+
+        public async Task<bool> UpdateBook(BookModel model)
+        {
+            string path = _client.BaseAddress + $"Admin/updateBook";
+
+            HttpResponseMessage response = await _client.PutAsJsonAsync(path, model);
+
+            var result = false;
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = await response.Content.ReadFromJsonAsync<bool>();
+            }
+
+            return result;
+        }
+
+        public async Task<List<UserModel>> GetAllAdmins()
+        {
+            string path = _client.BaseAddress + "Admin/getAllAdmins";
+            HttpResponseMessage response = await _client.GetAsync(path);
+
+            List<UserModel> users = new List<UserModel>();
+
+            if (response.IsSuccessStatusCode)
+            {
+                users = await response.Content.ReadFromJsonAsync<List<UserModel>>();
+            }
+
+            return users;
+        }
+
+        public async Task<List<BookModel>> GetBooksByIds(List<int> list)
+        {
+            string path = _client.BaseAddress + $"Book/getBooksByIds";
+
+            HttpResponseMessage response = await _client.PostAsJsonAsync(path, list);
+
+            List<BookModel> books = new List<BookModel>();
+
+            if (response.IsSuccessStatusCode)
+            {
+                books = await response.Content.ReadFromJsonAsync<List<BookModel>>();
+            }
+
+            return books;
+        }
+
+        public async Task<List<BookModel>> SearchBooks(string searchTerm)
+        {
+            string path = _client.BaseAddress + "Book/searchBooks?searchTerm=" + searchTerm;
+
+            HttpResponseMessage response = await _client.GetAsync(path);
+
+            List<BookModel> books = new List<BookModel>();
+
+            if (response.IsSuccessStatusCode)
+            {
+                books = await response.Content.ReadFromJsonAsync<List<BookModel>>();
+            }
+
+            return books;
         }
     }
 }
