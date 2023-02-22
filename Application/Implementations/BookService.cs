@@ -303,6 +303,7 @@ namespace Application.Implementations
             var books = _dbContext.Books.Include(x => x.Publishers)
                                          .Include(x => x.Categories)
                                          .Include(x => x.Authors)
+                                         .OrderByDescending(b => b.Id)
                                          .Take(10)
                                          .ToList();
 

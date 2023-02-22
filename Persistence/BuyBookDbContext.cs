@@ -31,14 +31,14 @@ namespace Persistence
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = "";
+                        entry.Entity.CreatedBy = "Administrator";
                         entry.Entity.Created = DateTime.Now;
                         entry.Entity.LastModified = DateTime.Now;
                         entry.Entity.LastModifiedBy = "";
                         break;
 
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = "";
+                        entry.Entity.LastModifiedBy = "Administrator";
                         entry.Entity.LastModified = DateTime.Now;
                         break;
                 }

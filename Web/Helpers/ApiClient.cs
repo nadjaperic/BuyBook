@@ -97,7 +97,7 @@ namespace Web.Helpers
 
         public async Task<List<BookModel>> GetFeaturedBooks()
         {
-            string path = _client.BaseAddress + "Book/getLastTenBooks";
+            string path = _client.BaseAddress + "Book/getFeaturedBooks";
             HttpResponseMessage response = await _client.GetAsync(path);
 
             List<BookModel> books = new List<BookModel>();
